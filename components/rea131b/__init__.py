@@ -4,7 +4,7 @@ import esphome.codegen as cg
 from esphome.const import CONF_ID
 
 rea131b_ns = cg.esphome_ns.namespace("rea131b")
-rea131b = rea131b_ns.class_("REA131B", cg.Component, cg.CustomAPIDevice)
+rea131b = rea131b_ns.class_("REA131B", cg.Component)
 
 CONFIG_SCHEMA = cv.Schema({
     cv.GenerateID(): cv.declare_id(rea131b),
