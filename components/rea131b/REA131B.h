@@ -4,7 +4,7 @@
 
 #include "esphome.h"
 
-class REA131B : public Component, public CustomAPIDevice {
+class REA131B : public Component {
    public:
     RFF60Emulator *thermoMixer, *thermoMain;
     RFF60Emulator::ThermoReadings _receivedReadings{NAN, NAN, NAN, NAN};
