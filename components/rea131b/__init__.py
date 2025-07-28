@@ -7,8 +7,8 @@ CONF_FOO = "foo"
 CONF_BAR = "bar"
 CONF_BAZ = "baz"
 
-example_component_ns = cg.esphome_ns.namespace("example_component")
-ExampleComponent = example_component_ns.class_("ExampleComponent", cg.Component)
+example_component_ns = cg.esphome_ns.namespace("rea131b")
+ExampleComponent = example_component_ns.class_("REA131B", cg.Component, cg.CustomAPIDevice)
 
 CONFIG_SCHEMA = cv.Schema({
     cv.GenerateID(): cv.declare_id(ExampleComponent),
