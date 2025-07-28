@@ -7,7 +7,7 @@ rea131b_ns = cg.esphome_ns.namespace("rea131b")
 rea131b = rea131b_ns.class_("REA131B", cg.Component, cg.CustomAPIDevice)
 
 CONFIG_SCHEMA = cv.Schema({
-    cv.GenerateID(): cv.declare_id(ExampleComponent),
+    cv.GenerateID(): cv.declare_id(rea131b),
 })
 
 
