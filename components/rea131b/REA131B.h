@@ -3,6 +3,7 @@
 #include <freertos/task.h>
 
 #include "esphome.h"
+#include "esphome/core/component.h"
 
 class REA131B : public Component, public CustomAPIDevice {
    public:
