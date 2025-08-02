@@ -67,6 +67,10 @@ void REA131B::loop() {
     // vTaskDelay(10);
 }
 
+void REA131B::dump_config() {
+      ESP_LOGCONFIG(TAG, "REA131B");
+}
+
 void REA131B::on_hello_world() {
     ESP_LOGD("custom", "Hello World!");
 }

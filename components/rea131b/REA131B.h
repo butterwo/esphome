@@ -37,6 +37,7 @@ class REA131B : public Component {
     static void rea131bCommsTask(void *);
     void setup() override; // setup() sets up the thermometer instances and creates the background communications task
     void loop() override; // loop() does nothing except push sensor readings
+    void dump_config() override;
     void on_hello_world();
     void queueSendMixer();
     void queueSendMain();
