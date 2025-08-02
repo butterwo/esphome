@@ -1,2 +1,0 @@
-# ESPhome developments
-
