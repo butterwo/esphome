@@ -25,13 +25,6 @@ void REA131B::rea131bCommsTask(void *pvParameters) {
 
 // setup() sets up the thermometer instances and creates the background communications task
 void REA131B::setup() {
-    // selectorPosnMap["TIMER"] = RFF60Emulator::SELECTOR_POSN::TIMER;
-    // selectorPosnMap["COMFORT"] = RFF60Emulator::SELECTOR_POSN::COMFORT;
-    // selectorPosnMap["ECO"] = RFF60Emulator::SELECTOR_POSN::ECO;
-
-    //register_service(&REA131B::on_hello_world, "hello_world");
-
-    //_readingsQueue = xQueueCreate(1, sizeof(RFF60Emulator::ThermoReadings));
 
     RFF60Emulator::setup();
     // address, polling address, regulator polling address
