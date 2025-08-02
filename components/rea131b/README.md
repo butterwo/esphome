@@ -12,7 +12,7 @@ external_components:
   - source:
       type: git
       url: https://github.com/butterwo/esphome.git
-    refresh: 0s
+    components: [ rea131b ]
 
 rea131b:
   id: my_rea131b_id
@@ -202,6 +202,7 @@ sensor:
       return id(my_rea131b_id)->_receivedReadings.boilerTemp;
     update_interval: 30s
 ```
+
 
 
 
