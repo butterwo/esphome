@@ -7,6 +7,7 @@ This ESPHome component emulates an RFF60 room thermostat for each circuit to:
 - control the temperature setpoint (+/- 6 deg C)
 - communicate the value of an external room temperature sensor to be used by the regulator
 - commute between Reduced, Comfort and Timer temperature presets
+- monitor the boiler, mixer, hot water and external temperatures
 
 It should be straightforward to add more thermostats (requires modification of the C++) to accomodate a boiler with more circuits.
 
@@ -211,6 +212,7 @@ sensor:
       return id(my_rea131b_id)->_receivedReadings.boilerTemp;
     update_interval: 30s
 ```
+
 
 
 
