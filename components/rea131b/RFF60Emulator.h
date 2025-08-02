@@ -6,7 +6,6 @@
 #include <CRC16.h>
 #include <SoftwareSerial.h>
 #include <esp_task_wdt.h>
-//#include <esphome.h>
 #include <freertos/queue.h>
 #include <sys/time.h>
 
@@ -95,8 +94,7 @@ class RFF60Emulator {
     QueueHandle_t _settingsQueue;
     static QueueHandle_t _readingsQueue;
     ThermoSettings _receivedSettings;
-    // static std::ostringstream stream;
-
+    
     uint8_t _skipThermostatsFlag;
     uint8_t _reducedTemp = 0x20;
     uint8_t _comfortTemp = 0x28;

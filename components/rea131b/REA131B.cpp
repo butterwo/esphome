@@ -37,15 +37,12 @@ void REA131B::setup() {
     // address, polling address, regulator polling address
     // polling addresses are 7 bit with MSB = even parity bit
     thermoMixer = RFF60Emulator::addInstance(0x21, 0x21, 0x90);
-    // thermoMixer = NULL;
     thermoMain = RFF60Emulator::addInstance(0x23, 0xa3, 0x90);
-    // thermoMain = NULL;
 
     // Create the background communications task, storing the handle.
     // Note that the passed parameter ucParameterToPass
     // must exist for the lifetime of the task, so in this case is declared static.
-    // xTaskCreate( vTaskCode, "NAME", STACK_SIZE, &ucParameterToPass, tskIDLE_PRIORITY, &xHandle );
-
+ 
     static uint8_t ucParameterToPass = 0;
     TaskHandle_t xHandle = NULL;
 

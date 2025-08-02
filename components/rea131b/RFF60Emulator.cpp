@@ -1,5 +1,4 @@
 #include "RFF60Emulator.h"
-
 #include "esphome/core/log.h"
 
 namespace esphome {
@@ -25,7 +24,6 @@ bool RFF60Emulator::_serialLogging = false;
 bool RFF60Emulator::_remoteControl = false;
 
 QueueHandle_t RFF60Emulator::_readingsQueue;
-// std::ostringstream RFF60Emulator::stream("", std::ios_base::app);
 
 RFF60Emulator::RFF60Emulator(uint8_t addr, uint8_t pollingAddress, uint8_t regulatorAddr) {
     _addr = addr;
@@ -33,6 +31,7 @@ RFF60Emulator::RFF60Emulator(uint8_t addr, uint8_t pollingAddress, uint8_t regul
     _regulatorAddr = regulatorAddr;
 }
 
+// setup the serial port and FreeRTOS message queue
 void RFF60Emulator::setup() {
 
     _readingsQueue = xQueueCreate(1, sizeof(ThermoReadings));
@@ -48,12 +47,14 @@ void RFF60Emulator::setup() {
     }
 }
 
+// add a thermostat instance
 RFF60Emulator *RFF60Emulator::addInstance(uint8_t addr, uint8_t pollingAddr, uint8_t regulatorAddr) {
     _instances[pollingAddr] = new RFF60Emulator(addr, pollingAddr, regulatorAddr);
     _instances[pollingAddr]->_settingsQueue = xQueueCreate(1, sizeof(ThermoSettings));
     return _instances[pollingAddr];
 }
 
+// emulates the thermostat listening for a polling on the serial bus
 RFF60Emulator *RFF60Emulator::waitUntilPolled() {
     size_t recvLen = 0;
     int prevAddr = 0;
@@ -108,6 +109,7 @@ RFF60Emulator *RFF60Emulator::waitUntilPolled() {
     return it->second;
 }
 
+// do the data exchange with the regulator(s) and simulated thermostat(s) with an initial header exchange
 int RFF60Emulator::doDataExchangeWithHeader() {
     _uart.setTimeout(LONG_TIMEOUT);
     size_t recvLen = 0;
@@ -127,6 +129,7 @@ int RFF60Emulator::doDataExchangeWithHeader() {
     return doDataExchange();
 }
 
+// do the data exchange with the regulator(s) and simulated thermostat(s)
 int RFF60Emulator::doDataExchange() {
     _uart.setTimeout(LONG_TIMEOUT);
     size_t recvLen = 0;
@@ -225,6 +228,7 @@ int RFF60Emulator::doDataExchange() {
     return poll();
 }
 
+// poll the possible regulator and thermostat addresses for replies
 int RFF60Emulator::poll() {
     size_t recvLen = 0;
     _uart.setTimeout(POLLING_TIMEOUT);
@@ -239,11 +243,6 @@ int RFF60Emulator::poll() {
     static const int addressesLength = 8;
 
     int startIndex = 0;
-    // if (_skipThermostatsFlag) {
-    //     startIndex = 3;
-    // } else {
-    //     startIndex = _addr - 0x21;
-    // }
     startIndex = _addr - 0x21;
 
     ESP_LOGD("custom", "Address %02x polling...", _addr);
@@ -294,6 +293,7 @@ int RFF60Emulator::poll() {
     return 0;
 }
 
+// transmit a string of bytes on the serial port
 void RFF60Emulator::transmitData(const uint8_t *buf, const size_t len, const Parity parity) {
     TickType_t xLastWakeTime;
     const TickType_t waitTicks = 3;
@@ -312,6 +312,7 @@ void RFF60Emulator::transmitData(const uint8_t *buf, const size_t len, const Par
     }
 }
 
+// transmit a byte on the serial port
 void RFF60Emulator::transmitByte(const uint8_t byte, const Parity parity) {
     static portMUX_TYPE tx_spinlock = portMUX_INITIALIZER_UNLOCKED;
     taskENTER_CRITICAL(&tx_spinlock);
@@ -319,6 +320,7 @@ void RFF60Emulator::transmitByte(const uint8_t byte, const Parity parity) {
     taskEXIT_CRITICAL(&tx_spinlock);
 }
 
+// receive a string of bytes from the serial port
 size_t RFF60Emulator::receiveData(uint8_t *buf, size_t len) {
     size_t recvLen = _uart.readBytes(buf, len);
     if (recvLen > 0) {
@@ -327,6 +329,7 @@ size_t RFF60Emulator::receiveData(uint8_t *buf, size_t len) {
     return recvLen;
 }
 
+// print out a string of bytes in hex with an added prefix string
 void RFF60Emulator::printHex(const uint8_t *buf, size_t len, const char *prefix = "") {
     std::ostringstream stream("", std::ios_base::app);
     if (len > 0) {
@@ -345,10 +348,10 @@ void RFF60Emulator::printHex(const uint8_t *buf, size_t len, const char *prefix 
         } else {
             vTaskDelay(LOGGING_SUBSTITUTE_DELAY_SERIAL);
         }
-        // stream.str("");
     }
 }
 
+// calculate the CRC of the message data bytes and insert it in the 
 void RFF60Emulator::insertCRC(uint8_t *buffer, int start, int length) {
     _crc->restart();
     _crc->add(buffer + start, length);
