@@ -5,7 +5,7 @@ Emulates an RFF60 room thermostat to:
 - communicate the value of an external room temperature sensor to be used by the regulator
 - commute between Reduced, Comfort and Timer temperature presets
 
-Required config:
+Config:
 
 ```
 external_components:
@@ -202,5 +202,6 @@ sensor:
       return id(my_rea131b_id)->_receivedReadings.boilerTemp;
     update_interval: 30s
 ```
+
 
 
