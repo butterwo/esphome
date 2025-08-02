@@ -1,6 +1,8 @@
 # rea131b
 Interface with an OE-tronic REA-131B heating boiler regulator over RS485.
+
 The regulator seems to be the same as some models from De Dietrich and EBV Gamma.
+
 This ESPHome component emulates an RFF60 room thermostat to:
 - control the temperature setpoint (+/- 6 deg C)
 - communicate the value of an external room temperature sensor to be used by the regulator
@@ -207,6 +209,7 @@ sensor:
       return id(my_rea131b_id)->_receivedReadings.boilerTemp;
     update_interval: 30s
 ```
+
 
 
 
