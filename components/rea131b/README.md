@@ -1,4 +1,4 @@
-# rea-131b
+# rea131b
 Interface with an OE-tronic REA-131B heating boiler regulator over RS485.
 Emulates an RFF60 room thermostat to:
 - control the temperature setpoint (+/- 6 deg C)
@@ -202,6 +202,7 @@ sensor:
       return id(my_rea131b_id)->_receivedReadings.boilerTemp;
     update_interval: 30s
 ```
+
 
 
 
