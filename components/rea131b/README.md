@@ -5,6 +5,7 @@ This ESPHome component emulates an RFF60 room thermostat to:
 - control the temperature setpoint (+/- 6 deg C)
 - communicate the value of an external room temperature sensor to be used by the regulator
 - commute between Reduced, Comfort and Timer temperature presets
+
 The data exchange over RS485 is unfortunately not Modbus, which would have been much simpler, but it uses a private protocol which required some reverse engineering.
 A background task is used to communicate with the regulator. As the protocol uses some weird parity setup, it had to be done using a software serial library.
 There is probably more functionality which could be implemented, but I went as far as I could with the reverse engineering and the essential features are working nicely.
@@ -206,6 +207,7 @@ sensor:
       return id(my_rea131b_id)->_receivedReadings.boilerTemp;
     update_interval: 30s
 ```
+
 
 
 
