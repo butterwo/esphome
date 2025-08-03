@@ -19,7 +19,6 @@ Configuration:
 
 ```
 esphome:
-
 ...
   libraries:
   - robtillaart/CRC
@@ -219,6 +218,7 @@ sensor:
       return id(my_rea131b_id)->_receivedReadings.boilerTemp;
     update_interval: 30s
 ```
+
 
 
 
