@@ -15,6 +15,10 @@ The data exchange over RS485 is unfortunately not Modbus, which would have been 
 A background task is used to communicate with the regulator. As the protocol uses some weird parity setup, it had to be done using a software serial library.
 There is probably more functionality which could be implemented, but I went as far as I could with the reverse engineering and the essential features are working nicely.
 
+
+<img width="1599" height="1028" alt="image" src="https://github.com/user-attachments/assets/e1fbe962-0dc0-44d7-af91-239e8b9bd7e9" />
+<br>
+<br>
 Configuration:
 
 ```
@@ -218,6 +222,7 @@ sensor:
       return id(my_rea131b_id)->_receivedReadings.boilerTemp;
     update_interval: 30s
 ```
+
 
 
 
