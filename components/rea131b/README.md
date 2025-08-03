@@ -18,6 +18,13 @@ There is probably more functionality which could be implemented, but I went as f
 Configuration:
 
 ```
+esphome:
+
+...
+  libraries:
+  - robtillaart/CRC
+  - plerup/EspSoftwareSerial
+
 external_components:
   - source:
       type: git
@@ -212,6 +219,7 @@ sensor:
       return id(my_rea131b_id)->_receivedReadings.boilerTemp;
     update_interval: 30s
 ```
+
 
 
 
