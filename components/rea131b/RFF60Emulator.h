@@ -25,6 +25,7 @@ class RFF60Emulator {
    public:
     enum SELECTOR_POSN {
         TIMER = 0,
+        TEST_01 = 1,
         COMFORT = 3,
         ECO = 4
     };
