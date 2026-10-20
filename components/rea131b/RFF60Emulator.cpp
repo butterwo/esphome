@@ -12,8 +12,12 @@ CRC16 *RFF60Emulator::_crc = new CRC16(0x1021, 0, 0, true, true);  // CRC16-KERM
 std::map<uint8_t, RFF60Emulator *> RFF60Emulator::_instances;
 std::map<const std::string, RFF60Emulator::SELECTOR_POSN> RFF60Emulator::selectorPosnMap{
     {"TIMER", SELECTOR_POSN::TIMER},
+    {"TEST_01", SELECTOR_POSN::TEST_01},
+    {"TEST_02", SELECTOR_POSN::TEST_02},
     {"COMFORT", SELECTOR_POSN::COMFORT},
-    {"ECO", SELECTOR_POSN::ECO}};
+    {"ECO", SELECTOR_POSN::ECO},
+    {"TEST_05", SELECTOR_POSN::TEST_05}
+};
 std::map<const std::string, RFF60Emulator::VERBOSE_LOGGING> RFF60Emulator::verboseLoggingMap{
     {"OFF", VERBOSE_LOGGING::VERBOSE_OFF},
     {"API", VERBOSE_LOGGING::VERBOSE_API},
@@ -419,7 +423,7 @@ RFF60Emulator::SELECTOR_POSN RFF60Emulator::getSelector() {
 }
 
 bool RFF60Emulator::getIgnoreMeasTemp() {
-    return (_dipSwitch & 0x01 == 1);
+    return ((_dipSwitch & 0x01) == 1);
 }
 
 void RFF60Emulator::settingsQueueSend(ThermoSettings *pSettings) {
