@@ -26,8 +26,9 @@ class RFF60Emulator {
     enum SELECTOR_POSN {
         TIMER = 0,
         COMFORT = 3,
-        ECO = 4
-    };
+        ECO = 4,
+        STANDBY = 5,
+   };
 
     enum VERBOSE_LOGGING {
         VERBOSE_OFF = 0,

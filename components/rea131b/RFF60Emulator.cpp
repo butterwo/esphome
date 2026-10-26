@@ -13,7 +13,9 @@ std::map<uint8_t, RFF60Emulator *> RFF60Emulator::_instances;
 std::map<const std::string, RFF60Emulator::SELECTOR_POSN> RFF60Emulator::selectorPosnMap{
     {"TIMER", SELECTOR_POSN::TIMER},
     {"COMFORT", SELECTOR_POSN::COMFORT},
-    {"ECO", SELECTOR_POSN::ECO}};
+    {"ECO", SELECTOR_POSN::ECO},
+    {"STANDBY", SELECTOR_POSN::STANDBY}
+};
 std::map<const std::string, RFF60Emulator::VERBOSE_LOGGING> RFF60Emulator::verboseLoggingMap{
     {"OFF", VERBOSE_LOGGING::VERBOSE_OFF},
     {"API", VERBOSE_LOGGING::VERBOSE_API},
@@ -60,7 +62,9 @@ RFF60Emulator *RFF60Emulator::waitUntilPolled() {
     int prevAddr = 0;
     std::map<uint8_t, RFF60Emulator *>::iterator it;
 
-    ESP_LOGD("custom", "Waiting for polling...");
+    if (_remoteControl) {
+        ESP_LOGD("custom", "Waiting for polling...");
+    }
 
     static TickType_t taskDelay = 10;
 
@@ -86,8 +90,11 @@ RFF60Emulator *RFF60Emulator::waitUntilPolled() {
         }
 
         if (!_remoteControl) {
-            ESP_LOGD("custom", "Remote control is disabled");
-            vTaskDelay(1000);
+            //ESP_LOGD("custom", "Remote control is disabled");
+            //vTaskDelay(1000);
+            // Don't send anything, just print out the received data
+            recvLen = receiveData(_recvBuf, 1024);
+            vTaskDelay(10);
             return 0;
         }
 
@@ -212,7 +219,7 @@ int RFF60Emulator::doDataExchange() {
     msg7[5] = _measTemp;
     msg7[6] = _knobSetting;
     msg7[10] = _selector;
-    msg7[11] = _dipSwitch;
+    msg7[11] = _dipSwitch | (_selector == SELECTOR_POSN::STANDBY ? 0x02 : 0x00);
     int index = 23 + ((_addr & 0x0f) - 1) * 8;
     msg7[index] = _comfortTemp;
     msg7[index + 1] = _comfortTemp;
@@ -419,7 +426,7 @@ RFF60Emulator::SELECTOR_POSN RFF60Emulator::getSelector() {
 }
 
 bool RFF60Emulator::getIgnoreMeasTemp() {
-    return (_dipSwitch & 0x01 == 1);
+    return ((_dipSwitch & 0x01) == 1);
 }
 
 void RFF60Emulator::settingsQueueSend(ThermoSettings *pSettings) {
