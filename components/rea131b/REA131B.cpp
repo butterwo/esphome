@@ -72,9 +72,9 @@ void REA131B::queueSendMixer() {
         bool remoteControl = enableDisableMap.find(remote_control_state_)->second;
         bool ignoreMeasTemp = !(enableDisableMap.find(mixer_circuit_use_room_temp_state_)->second);
         RFF60Emulator::ThermoSettings settings{selectorPosn, mixer_circuit_temp_offset_state_, mixer_circuit_meas_temp_state_,
-                                                ignoreMeasTemp, verboseLogging, remoteControl};
-        ESP_LOGD("custom", "settings:\n  selectorPosition: %d\n  temperatureOffset: %f\n  temperatureMeasurement: %f\n  ignoreMeasTemp: %d\n  verboseLogging: %d",
-                    settings.selectorPosition, settings.temperatureOffset, settings.temperatureMeasurement, settings.ignoreMeasTemp, settings.verboseLogging);
+                                                ignoreMeasTemp, verboseLogging, remoteControl, ecs_target_temp_state_};
+        ESP_LOGD("custom", "settings:\n  selectorPosition: %d\n  temperatureOffset: %f\n  temperatureMeasurement: %f\n  ignoreMeasTemp: %d\n  verboseLogging: %d\n  ecsTargetTemp: %f",
+                    settings.selectorPosition, settings.temperatureOffset, settings.temperatureMeasurement, settings.ignoreMeasTemp, settings.verboseLogging, settings.ecsTargetTemp);
         RFF60Emulator::ThermoSettings *pSettings = &settings;
         if (thermoMixer) {
             thermoMixer->settingsQueueSend(pSettings);
@@ -89,9 +89,9 @@ void REA131B::queueSendMain() {
         bool remoteControl = enableDisableMap.find(remote_control_state_)->second;
         bool ignoreMeasTemp = !(enableDisableMap.find(main_circuit_use_room_temp_state_)->second);
         RFF60Emulator::ThermoSettings settings{selectorPosn, main_circuit_temp_offset_state_, main_circuit_meas_temp_state_,
-                                                ignoreMeasTemp, verboseLogging, remoteControl};
-        ESP_LOGD("custom", "settings:\n  selectorPosition: %d\n  temperatureOffset: %f\n  temperatureMeasurement: %f\n  ignoreMeasTemp: %d\n  verboseLogging: %d",
-                    settings.selectorPosition, settings.temperatureOffset, settings.temperatureMeasurement, settings.ignoreMeasTemp, settings.verboseLogging);
+                                                ignoreMeasTemp, verboseLogging, remoteControl, ecs_target_temp_state_};
+        ESP_LOGD("custom", "settings:\n  selectorPosition: %d\n  temperatureOffset: %f\n  temperatureMeasurement: %f\n  ignoreMeasTemp: %d\n  verboseLogging: %d\n  ecsTargetTemp: %f",
+                    settings.selectorPosition, settings.temperatureOffset, settings.temperatureMeasurement, settings.ignoreMeasTemp, settings.verboseLogging, settings.ecsTargetTemp);
         RFF60Emulator::ThermoSettings *pSettings = &settings;
         if (thermoMain) {
             thermoMain->settingsQueueSend(pSettings);

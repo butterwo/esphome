@@ -15,6 +15,7 @@
 #include <ios>
 #include <map>
 #include <sstream>
+#include <cstdint>
 
 namespace esphome {
 namespace rea131b {
@@ -47,6 +48,7 @@ class RFF60Emulator {
         bool ignoreMeasTemp;
         VERBOSE_LOGGING verboseLogging;
         bool remoteControl;
+        float ecsTargetTemp;
     };
 
     struct ThermoReadings {
@@ -116,6 +118,7 @@ class RFF60Emulator {
     static const int LOGGING_SUBSTITUTE_DELAY_API = 3;
     static const int LOGGING_SUBSTITUTE_DELAY_SERIAL = 1;
 
+    static uint8_t _ecsTargetTemp;
     static bool _apiLogging;
     static bool _serialLogging;
     static bool _remoteControl;

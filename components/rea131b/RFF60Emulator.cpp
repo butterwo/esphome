@@ -21,6 +21,7 @@ std::map<const std::string, RFF60Emulator::VERBOSE_LOGGING> RFF60Emulator::verbo
     {"API", VERBOSE_LOGGING::VERBOSE_API},
     {"SERIAL", VERBOSE_LOGGING::VERBOSE_SERIAL},
     {"BOTH", VERBOSE_LOGGING::VERBOSE_BOTH}};
+uint8_t RFF60Emulator::_ecsTargetTemp = 0x6e;
 bool RFF60Emulator::_apiLogging = false;
 bool RFF60Emulator::_serialLogging = false;
 bool RFF60Emulator::_remoteControl = false;
@@ -79,13 +80,14 @@ RFF60Emulator *RFF60Emulator::waitUntilPolled() {
                 thermo->setKnobSetting(thermo->_receivedSettings.temperatureOffset);
                 thermo->setMeasTemp(thermo->_receivedSettings.temperatureMeasurement);
                 thermo->setIgnoreMeasTemp(thermo->_receivedSettings.ignoreMeasTemp);
+                _ecsTargetTemp = (uint8_t)((thermo->_receivedSettings.ecsTargetTemp * 2) + 0.5);
                 _remoteControl = thermo->_receivedSettings.remoteControl;
                 _apiLogging = (thermo->_receivedSettings.verboseLogging == VERBOSE_LOGGING::VERBOSE_API) ||
                               (thermo->_receivedSettings.verboseLogging == VERBOSE_LOGGING::VERBOSE_BOTH);
                 _serialLogging = (thermo->_receivedSettings.verboseLogging == VERBOSE_LOGGING::VERBOSE_SERIAL) ||
                                  (thermo->_receivedSettings.verboseLogging == VERBOSE_LOGGING::VERBOSE_BOTH);
-                ESP_LOGD("custom", "Address 0x%02x set members:\n    _selector = 0x%02x\n    _knobSetting = 0x%02x\n    _measTemp = 0x%02x\n    _dipSwitch = 0x%02x\n    _apiLogging = %d\n    _serialLogging = %d\n    _remoteControl = %d",
-                         thermo->_addr, thermo->_selector, thermo->_knobSetting, thermo->_measTemp, thermo->_dipSwitch, _apiLogging, _serialLogging, _remoteControl);
+                ESP_LOGD("custom", "Address 0x%02x set members:\n    _selector = 0x%02x\n    _knobSetting = 0x%02x\n    _measTemp = 0x%02x\n    _dipSwitch = 0x%02x\n    _apiLogging = %d\n    _serialLogging = %d\n    _remoteControl = %d\n    _ecsTargetTemp = 0x%02x",
+                         thermo->_addr, thermo->_selector, thermo->_knobSetting, thermo->_measTemp, thermo->_dipSwitch, _apiLogging, _serialLogging, _remoteControl, _ecsTargetTemp);
             }
         }
 
@@ -220,7 +222,7 @@ int RFF60Emulator::doDataExchange() {
     msg7[6] = _knobSetting;
     msg7[10] = _selector;
     msg7[11] = _dipSwitch | (_selector == SELECTOR_POSN::STANDBY ? 0x02 : 0x00);
-    msg7[13] = 0x28; // ECS target temperature to 20 degrees C (0x28 = 40 / 2)
+    msg7[13] = _ecsTargetTemp;
     /*
     int index = 23 + ((_addr & 0x0f) - 1) * 8;
     msg7[index] = _comfortTemp;
@@ -438,8 +440,8 @@ void RFF60Emulator::settingsQueueSend(ThermoSettings *pSettings) {
 
 bool RFF60Emulator::settingsQueueReceive() {
     if (xQueueReceive(_settingsQueue, &_receivedSettings, 0) == pdTRUE) {
-        ESP_LOGD("custom", "received settings:\n  selectorPosition: %d\n  temperatureOffset: %f\n  temperatureMeasurement: %f\n  verboseLogging: %d",
-                 _receivedSettings.selectorPosition, _receivedSettings.temperatureOffset, _receivedSettings.temperatureMeasurement, _receivedSettings.verboseLogging);
+        ESP_LOGD("custom", "received settings:\n  selectorPosition: %d\n  temperatureOffset: %f\n  temperatureMeasurement: %f\n  verboseLogging: %d\n  ecsTargetTemp: %f",
+                 _receivedSettings.selectorPosition, _receivedSettings.temperatureOffset, _receivedSettings.temperatureMeasurement, _receivedSettings.verboseLogging, _receivedSettings.ecsTargetTemp);
         return true;
     }
     return false;

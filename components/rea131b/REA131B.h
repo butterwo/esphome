@@ -26,6 +26,7 @@ class REA131B : public Component {
     std::string main_circuit_use_room_temp_state_;
     float main_circuit_temp_offset_state_;
     float main_circuit_meas_temp_state_;
+    float ecs_target_temp_state_;
 
     std::map<const std::string, bool> enableDisableMap{
         {"DISABLED", false},
