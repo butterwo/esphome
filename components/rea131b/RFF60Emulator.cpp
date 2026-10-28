@@ -220,10 +220,13 @@ int RFF60Emulator::doDataExchange() {
     msg7[6] = _knobSetting;
     msg7[10] = _selector;
     msg7[11] = _dipSwitch | (_selector == SELECTOR_POSN::STANDBY ? 0x02 : 0x00);
+    msg7[13] = 0x28; // ECS target temperature to 20 degrees C (0x28 = 40 / 2)
+    /*
     int index = 23 + ((_addr & 0x0f) - 1) * 8;
     msg7[index] = _comfortTemp;
     msg7[index + 1] = _comfortTemp;
     msg7[index + 2] = _reducedTemp;
+    */
     insertCRC(msg7, 1, 44);
     // send message buffer
     transmitData(msg7, 48);
