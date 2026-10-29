@@ -222,7 +222,13 @@ int RFF60Emulator::doDataExchange() {
     msg7[6] = _knobSetting;
     msg7[10] = _selector;
     msg7[11] = _dipSwitch | (_selector == SELECTOR_POSN::STANDBY ? 0x02 : 0x00);
-    msg7[13] = _ecsTargetTemp;
+    if (msg7[13] != _ecsTargetTemp) {
+        msg7[13] = _ecsTargetTemp;
+        msg7[14] = 0x01;  // start update handshake
+    }
+    else if (msg7[14] == 0x02) {  // handshake reply
+        msg7[14] = 0x00;  // clear handshake
+    }
     /*
     int index = 23 + ((_addr & 0x0f) - 1) * 8;
     msg7[index] = _comfortTemp;
