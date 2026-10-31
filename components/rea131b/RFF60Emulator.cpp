@@ -22,6 +22,7 @@ std::map<const std::string, RFF60Emulator::VERBOSE_LOGGING> RFF60Emulator::verbo
     {"SERIAL", VERBOSE_LOGGING::VERBOSE_SERIAL},
     {"BOTH", VERBOSE_LOGGING::VERBOSE_BOTH}};
 uint8_t RFF60Emulator::_ecsTargetTemp = 0x6e;
+bool RFF60Emulator::_doEcsHandshake = false;
 bool RFF60Emulator::_apiLogging = false;
 bool RFF60Emulator::_serialLogging = false;
 bool RFF60Emulator::_remoteControl = false;
@@ -222,13 +223,22 @@ int RFF60Emulator::doDataExchange() {
     msg7[6] = _knobSetting;
     msg7[10] = _selector;
     msg7[11] = _dipSwitch | (_selector == SELECTOR_POSN::STANDBY ? 0x02 : 0x00);
+    // Hot water
+    /*
     if (msg7[13] != _ecsTargetTemp) {
         msg7[13] = _ecsTargetTemp;
-        msg7[14] = 0x01;  // start update handshake
+        _doEcsHandshake = true;
     }
+    else if (_doEcsHandshake){
+        msg7[14] = 0x01; // start update handshake
+        _doEcsHandshake = false;
+    }
+    */
+    /*
     else if (msg7[14] == 0x02) {  // handshake reply
         msg7[14] = 0x00;  // clear handshake
     }
+    */
     /*
     int index = 23 + ((_addr & 0x0f) - 1) * 8;
     msg7[index] = _comfortTemp;

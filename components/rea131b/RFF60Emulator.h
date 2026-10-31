@@ -119,6 +119,7 @@ class RFF60Emulator {
     static const int LOGGING_SUBSTITUTE_DELAY_SERIAL = 1;
 
     static uint8_t _ecsTargetTemp;
+    static bool _doEcsHandshake;
     static bool _apiLogging;
     static bool _serialLogging;
     static bool _remoteControl;
