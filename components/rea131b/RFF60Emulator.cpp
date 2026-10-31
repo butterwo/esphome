@@ -96,8 +96,8 @@ RFF60Emulator *RFF60Emulator::waitUntilPolled() {
             //ESP_LOGD("custom", "Remote control is disabled");
             //vTaskDelay(1000);
             // Don't send anything, just print out the received data
-            recvLen = receiveData(_recvBuf, 1024);
-            vTaskDelay(10);
+            recvLen = debugReceiveData(_recvBuf, 1024);
+            vTaskDelay(1);
             return 0;
         }
 
@@ -357,6 +357,21 @@ size_t RFF60Emulator::receiveData(uint8_t *buf, size_t len) {
     return recvLen;
 }
 
+// receive a string of bytes from the serial port, byte by byte
+size_t RFF60Emulator::debugReceiveData(uint8_t *buf, size_t len) {
+    _uart.setTimeout(SHORT_TIMEOUT);
+    unsigned int byteCount = 0;
+    for (int byteCount = 0; byteCount < len; byteCount++) {
+        size_t recvLen = _uart.readBytes(buf + byteCount, 1);
+        if (recvLen == 0) {  // timed out
+            printHex(buf, byteCount, "");
+            taskYIELD();
+            break;
+        }
+    }
+    return (size_t)byteCount;
+}
+
 // print out a string of bytes in hex with an added prefix string
 void RFF60Emulator::printHex(const uint8_t *buf, size_t len, const char *prefix = "") {
     std::ostringstream stream("", std::ios_base::app);
@@ -469,8 +484,10 @@ void RFF60Emulator::readingsQueueSend(ThermoReadings *pReadings) {
 
 bool RFF60Emulator::readingsQueueReceive(ThermoReadings *pReadings) {
     if (xQueueReceive(_readingsQueue, pReadings, 0) == pdTRUE) {
-        ESP_LOGD("custom", "received readings:\n  outsideTemp: %f\n  hotWaterTemp: %f\n  mixerTemp: %f\n  boilerTemp: %f",
-                 pReadings->outsideTemp, pReadings->hotWaterTemp, pReadings->mixerTemp, pReadings->boilerTemp);
+        //if (_remoteControl) {
+            ESP_LOGD("custom", "received readings:\n  outsideTemp: %f\n  hotWaterTemp: %f\n  mixerTemp: %f\n  boilerTemp: %f",
+                     pReadings->outsideTemp, pReadings->hotWaterTemp, pReadings->mixerTemp, pReadings->boilerTemp);
+        //}
         return true;
     }
     return false;

@@ -83,6 +83,7 @@ class RFF60Emulator {
     static void transmitData(const uint8_t *, const size_t, const Parity = PARITY_SPACE);
     static void transmitByte(const uint8_t, const Parity);
     static size_t receiveData(uint8_t *, const size_t);
+    static size_t debugReceiveData(uint8_t *, const size_t);
     static void printHex(const uint8_t *, size_t, const char *);
     static void insertCRC(uint8_t *, int, int);
     static bool checkCRC(uint8_t *, int, int);
@@ -114,6 +115,7 @@ class RFF60Emulator {
     static const int LONG_TIMEOUT = 2000;
     static const int POLLING_TIMEOUT = 70;
     static const int READ_TIMEOUT = 10;
+    static const int SHORT_TIMEOUT = 5;
 
     static const int LOGGING_SUBSTITUTE_DELAY_API = 3;
     static const int LOGGING_SUBSTITUTE_DELAY_SERIAL = 1;
